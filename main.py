@@ -95,10 +95,10 @@
 #         lines.append("| " + " | ".join(row) + " |")
 #     return "\n".join(lines)
 
-# # GET /events/ endpoint with logging and error handling
-# @app.get("/events/", response_class=Response, responses={200: {"content": {"text/plain": {}}}})
+# # GET /events endpoint with logging and error handling
+# @app.get("/events", response_class=Response, responses={200: {"content": {"text/plain": {}}}})
 # async def get_events():
-#     logger.info("Received request for /events/")
+#     logger.info("Received request for /events")
 #     try:
 #         auth = get_salesforce_access_token()
 #         token = auth["access_token"]
@@ -152,7 +152,7 @@
 #             return Response(content="| id | subject | ... |\n|---|---|...|", media_type="text/plain")
 #         return Response(content=build_markdown_local(events), media_type="text/plain")
 #     except Exception as e:
-#         logger.error(f"Error in /events/: {str(e)}")
+#         logger.error(f"Error in /events: {str(e)}")
 #         raise HTTPException(status_code=500, detail="Failed to fetch events")
 
 # # Override OpenAPI schema for Watsonx Orchestrate skill
@@ -289,9 +289,9 @@ def build_markdown_local(events: List[EventOut]) -> str:
     return "\n".join(lines)
 
 # GET /events/ endpoint with logging and error handling
-@app.get("/events/", response_class=Response, responses={200: {"content": {"text/plain": {}}}})
+@app.get("/events", response_class=Response, responses={200: {"content": {"text/plain": {}}}})
 async def get_events():
-    logger.info("Received request for /events/")
+    logger.info("Received request for /events")
     try:
         auth = get_salesforce_access_token()
         token = auth["access_token"]
@@ -345,7 +345,7 @@ async def get_events():
             return Response(content="| id | subject | ... |\n|---|---|...|", media_type="text/plain")
         return Response(content=build_markdown_local(events), media_type="text/plain")
     except Exception as e:
-        logger.error(f"Error in /events/: {str(e)}")
+        logger.error(f"Error in /events: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to fetch events")
 
 # Override OpenAPI schema for Watsonx Orchestrate skill

@@ -10,10 +10,10 @@
     "x-ibm-skill-subtype": "invoke"
   },
   "paths": {
-    "/events/": {
+    "/events": {
       "get": {
         "summary": "Get Events",
-        "operationId": "get_events_events__get",
+        "operationId": "get_events_events_get",
         "responses": {
           "200": {
             "description": "Successful Response",
