@@ -1,21 +1,93 @@
 openapi: 3.0.3
 info:
   title: Salesforce Events Skill
-  description: Fetch Salesforce events for Watsonx Orchestrate skill
+  description: Fetch Salesforce events for Watsonx Orchestrate skill.
   version: 1.0.0
   x-ibm-application-name: SalesforceEventsSkill
   x-ibm-application-id: salesforce_events_skill
   x-ibm-skill-type: rest
   x-ibm-skill-subtype: invoke
+servers:
+  - url: https://didactic-disco-jj9vgv695wjg25wq-8000.app.github.dev
+security:
+  - clientID: []
 paths:
   /events:
     get:
-      summary: Get Events
-      operationId: get_events_events_get
+      summary: Retrieve a list of Salesforce events
+      description: Fetches events from Salesforce and returns them in a Markdown table format.
       responses:
         '200':
-          description: Successful Response
+          description: Successfully retrieved events
           content:
-            text/plain: {}
-servers:
-  - url: https://didactic-disco-jj9vgv695wjg25wq-8000.app.github.dev
+            text/plain:
+              schema:
+                type: string
+                example: |
+                  | id | subject | owner_id | owner_name | what_id | what_name | account_id | account_name | appointment_status_c | start_datetime | end_datetime | description | created_by_name | created_by_id | last_modified_by_name | last_modified_by_id |
+                  |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+                  | evt123 | Meeting | usr456 | John Doe | opp789 | Opportunity X | acc101 | Acme Corp | Scheduled | 2025-05-06T10:00:00Z | 2025-05-06T11:00:00Z | Discuss project | Jane Smith | usr111 | Jane Smith | usr111 |
+        '401':
+          description: Salesforce authentication failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: Salesforce authentication failed
+        '500':
+          description: Failed to fetch events
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: Failed to fetch events
+components:
+  securitySchemes:
+    clientID:
+      type: apiKey
+      name: X-IBM-Client-Id
+      in: header
+x-ibm-configuration:
+  cors:
+    enabled: true
+  gateway: datapower-api-gateway
+  type: rest
+  phase: realized
+  enforced: true
+  testable: true
+  assembly:
+    execute:
+      - invoke:
+          title: fetch events
+          version: 2.0.0
+          verb: GET
+          target-url: https://didactic-disco-jj9vgv695wjg25wq-8000.app.github.dev/events
+          follow-redirects: false
+          timeout: 30
+          header-control:
+            type: blocklist
+            values: []
+          inject-proxy-headers: true
+          persistent-connection: true
+          backend-type: json
+          output: events
+          description: Retrieves events from Salesforce via the FastAPI endpoint.
+      - parse:
+          version: 2.1.0
+          title: parse response
+          parse-settings-reference:
+            default: apic-default-parsesettings
+          input: events
+          output: events
+          description: Parses the response to extract event data in Markdown format.
+    finally: []
+  activity-log:
+    enabled: true
+    success-content: activity
+    error-content: payload
