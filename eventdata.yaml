@@ -1,0 +1,21 @@
+openapi: 3.0.3
+info:
+  title: Salesforce Events Skill
+  description: Fetch Salesforce events for Watsonx Orchestrate skill
+  version: 1.0.0
+  x-ibm-application-name: SalesforceEventsSkill
+  x-ibm-application-id: salesforce_events_skill
+  x-ibm-skill-type: rest
+  x-ibm-skill-subtype: invoke
+paths:
+  /events:
+    get:
+      summary: Get Events
+      operationId: get_events_events_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            text/plain: {}
+servers:
+  - url: https://didactic-disco-jj9vgv695wjg25wq-8000.app.github.dev
